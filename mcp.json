@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "exposure-canary": {
+      "command": "uv",
+      "args": ["run", "--extra", "mcp", "python", "-m", "exposure_canary.mcp_server"]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "exposure-canary",
+  "version": "0.1.0",
+  "description": "Defensive canaries for assets you own: URL, DNS, and email local-part, plus webhook import and a Markdown report.",
+  "author": {
+    "name": "Saulo Filho",
+    "url": "https://github.com/saulofilho"
+  },
+  "repository": "https://github.com/saulofilho/exposure-canary",
+  "license": "MIT",
+  "keywords": ["security", "canary", "exposure", "skills"]
+}

@@ -1,7 +1,7 @@
 # Exposure Canary
 
-Antes de criar isca, importar webhook ou explicar um alerta, leia `plugin/skills/exposure-canary/SKILL.md`.
+Before creating a canary, importing a webhook, or explaining an alert, read `skills/exposure-canary/SKILL.md`.
 
-Use a CLI ou as tools MCP `create_canary`, `import_webhook` e `render_report`.
+Use the CLI or the MCP tools `create_canary`, `import_webhook`, and `render_report`.
 
-Pare quando o pedido sair da defesa de um ativo que o usuário controla.
+Stop when the request leaves defense of an asset the user owns.

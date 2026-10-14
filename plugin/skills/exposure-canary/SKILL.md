@@ -1,65 +1,65 @@
 ---
 name: exposure-canary
 description: >-
-  Cria iscas defensivas de URL, DNS e parte local de e-mail em ativos próprios,
-  importa webhooks, deduplica eventos, classifica severidade e gera relatório
-  Markdown pela CLI ou pelas tools MCP create_canary, import_webhook e
-  render_report. Use quando o pedido for canary, isca, alerta de exposição,
-  webhook de canário ou saber se alguém tocou um ativo seu. Pare em pedido de
-  rastrear terceiros, fingerprint, pixel, identificar quem investigou ou
-  desinformação.
+  Creates defensive URL, DNS, and email canaries on assets the user owns,
+  imports webhooks, deduplicates events, assigns severity, and renders a
+  Markdown report through the CLI or the MCP tools create_canary,
+  import_webhook, and render_report. Use when the user asks for a canary,
+  isca, exposure alert, webhook de canário, or whether someone touched an
+  asset they control. Stop when the request is to track someone else,
+  fingerprint, use a pixel, identify an investigator, or plant disinformation.
 ---
 
 # Exposure Canary
 
-Use a biblioteca. Não escreva servidor, pixel ou coletor de fingerprint.
+Use the library. Answer in the user's language. Do not write a server, a pixel, or a fingerprint collector.
 
-`state_path` absoluto, dentro do projeto do usuário. Default da CLI: `.exposure-canary`. O `state.json` fica fora do git.
+`state_path` is an absolute directory inside the user's project. The CLI default is `.exposure-canary`. Keep `state.json` out of git.
 
-## Escopo
+## Scope
 
-Antes de criar uma isca, confirme qual ativo é do usuário: página, zona DNS ou domínio de e-mail que ele controla.
+Before creating a canary, confirm which asset the user controls: a page, a DNS zone, or an email domain.
 
-`owned` / `--owned` é a confirmação dele. Sem essa confirmação, não chame `create_canary`.
+`owned` / `--owned` is their confirmation. Do not call `create_canary` without it.
 
-Uma isca por superfície. O `label` diz qual superfície foi tocada.
+One canary per surface. `label` names the surface that was touched.
 
-## Mapa de onde plantar
+## Where to plant
 
-- **URL** — `value` no formato `https://<coletor>/c/<id>`, numa página ou arquivo que ele publica. O coletor é um host https dele. A v1 não inclui esse host: ele só exporta JSON.
-- **DNS** — `value` no formato `<id>.<zona>`, na zona que ele administra. Coloque esse nome só no material que ele quer observar.
-- **E-mail** — `value` no formato `cn-<hex>@<domínio>`, num único lugar. O domínio precisa receber correio dele.
+- **URL** — `value` is `https://<collector>/c/<id>` on a page or file they publish. The collector is an https host they operate. This version does not include that host: they export JSON from it.
+- **DNS** — `value` is `<id>.<zone>` in a zone they administer. Put that name only in the material they want to watch.
+- **Email** — `value` is `cn-<hex>@<domain>` in one place. They must receive mail for that domain.
 
-Depois de `create_canary`, devolva `value` e diga onde plantar.
+After `create_canary`, return `value` and say where to plant it.
 
-## Leitura do alerta
+## Reading an alert
 
-1. Peça o JSON que o coletor dele gravou. Campos aceitos: `canary_id` (ou o `value` da isca no texto), `observed_at`, `source`.
-2. Chame `import_webhook`.
-3. Chame `render_report` e explique a severidade:
-   - **Alta** em DNS ou e-mail: aquela isca foi usada.
-   - **Média** em URL: primeira origem a tocar essa URL.
-   - **Alta** em URL: uma origem nova, diferente da primeira.
-   - **Baixa**: a mesma origem voltou fora da janela de 5 minutos, ou o token não está no registro.
-   - Duplicata na mesma janela, mesma origem e mesma isca: a importação ignora.
-4. Diga o ativo e o rótulo. Pessoa, intenção e pesquisa feita fora da isca ficam de fora do relatório.
+1. Ask for the JSON their collector stored. Accepted fields: `canary_id` (or the canary `value` in the text), `observed_at`, and `source`.
+2. Call `import_webhook`.
+3. Call `render_report` and explain the severity:
+   - **High** on DNS or email: that canary was used.
+   - **Medium** on a URL: the first source to touch that URL.
+   - **High** on a URL: a source other than the first one.
+   - **Low**: the same source returned outside the 5-minute window, or the token is not in the registry.
+   - A duplicate in the same window, from the same source, for the same canary, is ignored.
+4. Name the asset and the label. Person, intent, and searches made outside the canary stay out of the report.
 
-## Parada
+## Stop
 
-Pare, sem código e sem isca, quando o pedido pedir:
+Stop, with no code and no canary, when the request asks for:
 
-- ativo de outra pessoa
-- descobrir quem acessou, além da origem que o coletor dele já registrou
-- fingerprint, pixel, user-agent, geolocalização ou dispositivo
-- documento-isca, chave falsa, desinformação ou resposta à origem
-- servidor para capturar visitantes
+- someone else's asset
+- who visited, beyond the source their collector already stored
+- a fingerprint, pixel, user-agent, geolocation, or device profile
+- a decoy document, a fake key, disinformation, or a reply to the source
+- a server that captures visitors
 
-Nesse caso, diga que a v1 cobre criação da isca, importação do webhook e o relatório.
+Say that this version covers canary creation, webhook import, and the report.
 
 ## Tools
 
 - `create_canary(kind, label, asset, owned, state_path, collector|zone|domain)`
-- `import_webhook(state_path, webhook_path ou payload_json)`
-- `render_report(state_path, output_path opcional)`
+- `import_webhook(state_path, webhook_path or payload_json)`
+- `render_report(state_path, optional output_path)`
 
 CLI: `exposure-canary create`, `exposure-canary import-webhook`, `exposure-canary report`.

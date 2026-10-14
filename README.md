@@ -1,5 +1,7 @@
 # Exposure Canary
 
+Site: [saulofilho.github.io/exposure-canary](https://saulofilho.github.io/exposure-canary/). The page source is `docs/`. GitHub Pages deploys it from the `Deploy GitHub Pages` workflow. The repository needs Pages set to **GitHub Actions** once, under Settings, then Pages.
+
 Defensive canaries for assets you control. Create a unique URL, DNS name, or email local-part, import the JSON your own collector already stored, deduplicate the hits, assign a severity, and render a Markdown report.
 
 The report records the time, the canary, the asset, and the source string your collector sent. It does not identify a person, infer intent, or cover a search that never touched the canary.

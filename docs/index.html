@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exposure Canary</title>
+  <meta name="description" content="Defensive URL, DNS, and email canaries for assets you control. Python CLI, library, and Cursor plugin.">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="desktop">
+    <nav aria-label="Sections">
+      <ul class="menu">
+        <li><a href="#home" data-panel="home"><span class="hot">H</span>ome</a></li>
+        <li><a href="#use" data-panel="use"><span class="hot">U</span>se</a></li>
+        <li><a href="#cli" data-panel="cli"><span class="hot">C</span>LI</a></li>
+        <li><a href="#mcp" data-panel="mcp"><span class="hot">M</span>CP</a></li>
+        <li><a href="#severity" data-panel="severity"><span class="hot">S</span>everity</a></li>
+      </ul>
+    </nav>
+
+    <section class="window" aria-labelledby="title">
+      <div class="titlebar">
+        <span id="title">EXPOSURE CANARY</span>
+        <span>v0.1.0</span>
+      </div>
+      <div class="sheet">
+        <article id="home" class="panel">
+          <h1>The record changes when someone touches the canary.</h1>
+          <p>Exposure Canary creates a token on an asset you control: a URL, a DNS name, or an email address. When your collector stores a hit, the tool imports the JSON, folds repeats, and writes a report.</p>
+          <p>The report keeps the time, the kind, the asset, and the source your collector sent. A person and an intent stay out of it. The collector remains a host you operate.</p>
+          <p>Code: <a href="https://github.com/saulofilho/exposure-canary">github.com/saulofilho/exposure-canary</a></p>
+        </article>
+
+        <article id="use" class="panel" hidden>
+          <h1>Three canaries, one registry.</h1>
+          <table>
+            <thead>
+              <tr><th>Kind</th><th>Value</th><th>You control</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>URL</td><td>https://&lt;collector&gt;/c/&lt;id&gt;</td><td>the https host</td></tr>
+              <tr><td>DNS</td><td>&lt;id&gt;.&lt;zone&gt;</td><td>the zone</td></tr>
+              <tr><td>Email</td><td>cn-&lt;hex&gt;@&lt;domain&gt;</td><td>the mailbox</td></tr>
+            </tbody>
+          </table>
+          <p>One canary per surface. The label names the surface that was touched. Create requires <code>--owned</code>: your confirmation that the asset is yours.</p>
+          <p><code>.exposure-canary/state.json</code> holds the ids. Keep it out of git.</p>
+        </article>
+
+        <article id="cli" class="panel" hidden>
+          <h1>CLI</h1>
+          <pre>uv pip install -e ".[mcp]"
+
+exposure-canary create \
+  --kind url --label page --asset site \
+  --collector https://collect.example --owned
+
+exposure-canary import-webhook webhook.json
+exposure-canary report -o report.md</pre>
+          <p>DNS takes <code>--zone</code>. Email takes <code>--domain</code>. A webhook accepts <code>canary_id</code>, <code>observed_at</code>, and <code>source</code>. The same canary, the same source, and the same 5-minute window count once.</p>
+        </article>
+
+        <article id="mcp" class="panel" hidden>
+          <h1>Cursor plugin</h1>
+          <p>Three tools: <code>create_canary</code>, <code>import_webhook</code>, <code>render_report</code>.</p>
+          <p>The <code>exposure-canary</code> skill stays on an asset you own, says where to plant the value, and stops when the request leaves defense.</p>
+          <p>The server starts with <code>uv</code> on PATH, from the repository root.</p>
+          <pre>uv run --extra mcp python -m exposure_canary.mcp_server</pre>
+        </article>
+
+        <article id="severity" class="panel" hidden>
+          <h1>Severity</h1>
+          <table>
+            <thead>
+              <tr><th>What arrived</th><th>Level</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>DNS or email, new window</td><td>High</td></tr>
+              <tr><td>URL, first source</td><td>Medium</td></tr>
+              <tr><td>URL, a different source</td><td>High</td></tr>
+              <tr><td>URL, the same source after 5 minutes</td><td>Low</td></tr>
+              <tr><td>Token missing from the registry</td><td>Low</td></tr>
+            </tbody>
+          </table>
+          <p>Python 3.10 or newer. MIT license.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="status">
+      <span>LN 1</span>
+      <span><img src="logo.svg" alt="">exposure-canary v0.1.0</span>
+    </footer>
+  </div>
+  <script>
+    const links = document.querySelectorAll(".menu a");
+    const panels = document.querySelectorAll(".panel");
+
+    function show(id) {
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== id;
+      });
+      links.forEach((link) => {
+        const on = link.dataset.panel === id;
+        if (on) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const id = link.dataset.panel;
+        history.replaceState(null, "", "#" + id);
+        show(id);
+      });
+    });
+
+    const initial = location.hash.replace("#", "");
+    show(document.getElementById(initial) ? initial : "home");
+  </script>
+</body>
+</html>

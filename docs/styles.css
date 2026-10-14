@@ -1,9 +1,10 @@
 :root {
-  --desk: #b5b5b5;
+  --desk: #5fff87;
   --ink: #111111;
   --hot: #c40000;
-  --blue: #0000aa;
-  --yellow: #ffff55;
+  --term: #0c0c0c;
+  --fg: #d4d4d4;
+  --prompt: #5fff87;
   --paper: #ffffff;
   --bezel: #000000;
 }
@@ -66,10 +67,10 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--blue);
-  color: var(--yellow);
-  border: 3px solid var(--paper);
-  box-shadow: inset 0 0 0 1px var(--blue), inset 0 0 0 4px var(--paper);
+  background: var(--term);
+  color: var(--fg);
+  border: 3px solid #3c3c3c;
+  box-shadow: inset 0 0 0 1px var(--term), inset 0 0 0 4px #3c3c3c;
   padding: 8px 10px 6px;
 }
 
@@ -82,24 +83,24 @@ body {
   letter-spacing: 0.04em;
 }
 
-.titlebar span:last-child { color: #7ee7e7; }
+.titlebar span:last-child { color: var(--prompt); }
 
 .sheet {
   flex: 1;
   overflow: auto;
   padding: 8px 18px 16px;
-  scrollbar-color: #1aa7b8 var(--blue);
+  scrollbar-color: #3c3c3c var(--term);
   scrollbar-width: auto;
 }
 
-.sheet::-webkit-scrollbar { width: 22px; }
+.sheet::-webkit-scrollbar { width: 14px; }
 .sheet::-webkit-scrollbar-track {
-  background: linear-gradient(#7ee7e7, #0e7490);
-  border-left: 2px solid var(--paper);
+  background: #111111;
+  border-left: 1px solid #3c3c3c;
 }
 .sheet::-webkit-scrollbar-thumb {
-  background: #d8d8d8;
-  border: 2px solid #222;
+  background: #3c3c3c;
+  border: 2px solid #111111;
 }
 
 h1, h2, p { margin: 0 0 14px; }
@@ -111,22 +112,27 @@ h1 {
   letter-spacing: 0.03em;
 }
 
+h1::before {
+  content: "❯ ";
+  color: var(--prompt);
+}
+
 h2 {
   color: var(--paper);
   font-size: 1em;
   font-weight: 400;
 }
 
-a { color: var(--paper); }
+a { color: #7dccff; }
 
 .panel[hidden] { display: none; }
 
 pre {
   margin: 0 0 16px;
   padding: 10px 12px;
-  background: #000080;
-  color: var(--yellow);
-  border: 1px solid #7ee7e7;
+  background: #000000;
+  color: var(--fg);
+  border: 1px solid #3c3c3c;
   overflow-x: auto;
   font: inherit;
 }
